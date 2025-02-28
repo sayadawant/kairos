@@ -9,7 +9,8 @@ The Kairos agent follows a structured interaction flow:
 3. Provides a brief preview of the forthcoming advice
 4. Facilitates a PFT token donation process with transaction verification
 5. Delivers comprehensive, personalized purpose guidance (1000-2000 tokens)
-6. Closes with an option for additional donations
+6. For premium donations (>=10 PFT), provides additional Oracle Vision insights
+7. Closes with an option for additional donations
 
 ### Prerequisites
 
@@ -44,7 +45,11 @@ Follow the on-screen prompts to interact with the purpose agent.
 
 - `openai`: For AI model access (GPT-4o)
 - `python-dotenv`: For environment variable loading
-- Local module `pft_transact_check`: For donation verification
+- `xrpl-py`: For XRP Ledger interaction
+- `aiohttp`: For asynchronous HTTP requests
+- Local modules:
+  - `pft_transact_check`: For donation verification
+  - `pythia_addon`: For Oracle Vision feature (premium tier)
 
 ## Configuration
 
@@ -54,13 +59,20 @@ Configure the agent through the `.env` file:
 - `XRPL_RPC_ENDPOINT`: XRPL node endpoint for transaction verification
 - `WALLET_ADDRESS`: PFT token receiving wallet address
 - `MIN_AMOUNT`: Minimum donation amount (default: 2 PFT)
+- `MIN_AMOUNT_ADDON`: Premium tier threshold (default: 10 PFT)
 - `TIMEOUT`: Donation verification timeout (default: 300 seconds)
 - `POLL_INTERVAL`: Verification polling interval (default: 10 seconds)
 - `SYSTEM_PROMPT`: Base system prompt for the purpose coach AI
+- `FOLLOWUP_SYSTEM_PROMPT`: System prompt for generating follow-up questions
+- `PYTHIA_SYSTEM_PROMPT`: System prompt for Oracle Vision (premium feature)
 
 ## Notes
 
-- The agent uses two separate API calls to OpenAI:
-  1. First call handles follow-up questions and generates a summary
-  2. Second call generates comprehensive advice using the conversation history
-- This approach balances quality with API usage efficiency
+- The agent uses several API calls to OpenAI:
+  1. First call generates follow-up questions to better understand the user
+  2. Second call creates a brief preview/summary of the forthcoming advice
+  3. Third call generates comprehensive purpose guidance
+  4. Optional fourth call (for premium users) invokes the Oracle Vision
+- The premium Oracle Vision feature provides mystical, future-oriented wisdom
+- All system prompts are configurable through environment variables
+- The code is modular, with separate components for purpose advice and oracle insights
